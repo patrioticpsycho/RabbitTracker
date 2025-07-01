@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { FaPaw } from "react-icons/fa";
 import { Heart, DollarSign, Calendar, Plus, Syringe } from "lucide-react";
-import { FloatingActionButton } from "@/components/ui/floating-action-button";
+
 import { useState } from "react";
 import { RabbitForm } from "@/components/forms/rabbit-form";
 import { BreedingForm } from "@/components/forms/breeding-form";
@@ -219,11 +219,7 @@ export default function Dashboard() {
         </Card>
       )}
 
-      <FloatingActionButton
-        onAddRabbit={() => setShowRabbitForm(true)}
-        onAddBreeding={() => setShowBreedingForm(true)}
-        onAddExpense={() => setShowExpenseForm(true)}
-      />
+
 
       {/* Forms */}
       <RabbitForm 

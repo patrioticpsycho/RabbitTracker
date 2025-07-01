@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 import { ExpenseCard } from "@/components/cards/expense-card";
 import { ExpenseForm } from "@/components/forms/expense-form";
-import { FloatingActionButton } from "@/components/ui/floating-action-button";
+
 import type { Expense } from "@shared/schema";
 
 export default function Expenses() {
@@ -72,6 +74,15 @@ export default function Expenses() {
 
   return (
     <div className="p-4 space-y-4">
+      {/* Header with add button */}
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Expenses</h1>
+        <Button onClick={() => setShowForm(true)} size="sm" className="gap-2">
+          <Plus className="h-4 w-4" />
+          Add Expense
+        </Button>
+      </div>
+
       {/* Expense Summary */}
       <Card>
         <CardContent className="p-4">
@@ -124,9 +135,7 @@ export default function Expenses() {
         )}
       </div>
 
-      <FloatingActionButton
-        onAddExpense={() => setShowForm(true)}
-      />
+
 
       <ExpenseForm
         open={showForm}

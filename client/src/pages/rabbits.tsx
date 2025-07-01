@@ -2,10 +2,10 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Filter } from "lucide-react";
+import { Search, Filter, Plus } from "lucide-react";
 import { RabbitCard } from "@/components/cards/rabbit-card";
 import { RabbitForm } from "@/components/forms/rabbit-form";
-import { FloatingActionButton } from "@/components/ui/floating-action-button";
+
 import type { Rabbit } from "@shared/schema";
 
 export default function Rabbits() {
@@ -58,6 +58,15 @@ export default function Rabbits() {
 
   return (
     <div className="p-4 space-y-4">
+      {/* Header with search and add button */}
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Rabbits</h1>
+        <Button onClick={() => setShowForm(true)} size="sm" className="gap-2">
+          <Plus className="h-4 w-4" />
+          Add Rabbit
+        </Button>
+      </div>
+
       {/* Search and Filter */}
       <div className="flex space-x-2">
         <div className="flex-1 relative">
@@ -94,9 +103,7 @@ export default function Rabbits() {
         )}
       </div>
 
-      <FloatingActionButton
-        onAddRabbit={() => setShowForm(true)}
-      />
+
 
       <RabbitForm
         open={showForm}

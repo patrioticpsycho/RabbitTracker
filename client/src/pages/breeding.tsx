@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 import { BreedingCard } from "@/components/cards/breeding-card";
 import { BreedingForm } from "@/components/forms/breeding-form";
-import { FloatingActionButton } from "@/components/ui/floating-action-button";
+
 import type { BreedingRecord } from "@shared/schema";
 
 export default function Breeding() {
@@ -59,6 +60,15 @@ export default function Breeding() {
 
   return (
     <div className="p-4 space-y-4">
+      {/* Header with add button */}
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Breeding</h1>
+        <Button onClick={() => setShowForm(true)} size="sm" className="gap-2">
+          <Plus className="h-4 w-4" />
+          Add Record
+        </Button>
+      </div>
+
       {/* Tabs */}
       <div className="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
         <Button
@@ -98,9 +108,7 @@ export default function Breeding() {
         )}
       </div>
 
-      <FloatingActionButton
-        onAddBreeding={() => setShowForm(true)}
-      />
+
 
       <BreedingForm
         open={showForm}
