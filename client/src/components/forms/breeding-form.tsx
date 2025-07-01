@@ -250,7 +250,7 @@ export function BreedingForm({ open, onOpenChange, record, preSelectedRabbit }: 
                     <FormItem>
                       <FormLabel>Actual Kindle Date</FormLabel>
                       <FormControl>
-                        <Input type="date" {...field} />
+                        <Input type="date" {...field} value={field.value || ""} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -269,6 +269,7 @@ export function BreedingForm({ open, onOpenChange, record, preSelectedRabbit }: 
                             type="number" 
                             placeholder="8"
                             {...field}
+                            value={field.value || ""}
                             onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
                           />
                         </FormControl>
@@ -288,6 +289,7 @@ export function BreedingForm({ open, onOpenChange, record, preSelectedRabbit }: 
                             type="number" 
                             placeholder="7"
                             {...field}
+                            value={field.value || ""}
                             onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
                           />
                         </FormControl>
@@ -306,7 +308,7 @@ export function BreedingForm({ open, onOpenChange, record, preSelectedRabbit }: 
                 <FormItem>
                   <FormLabel>Nest Box Date (Optional)</FormLabel>
                   <FormControl>
-                    <Input type="date" {...field} />
+                    <Input type="date" {...field} value={field.value || ""} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -320,7 +322,7 @@ export function BreedingForm({ open, onOpenChange, record, preSelectedRabbit }: 
                 <FormItem>
                   <FormLabel>Notes</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Additional notes..." {...field} />
+                    <Textarea placeholder="Additional notes..." {...field} value={field.value || ""} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

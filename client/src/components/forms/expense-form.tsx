@@ -204,7 +204,7 @@ export function ExpenseForm({ open, onOpenChange, expense }: ExpenseFormProps) {
                 <FormItem>
                   <FormLabel>Vendor (Optional)</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Farm Supply Store" {...field} />
+                    <Input placeholder="e.g., Farm Supply Store" {...field} value={field.value || ""} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -218,7 +218,7 @@ export function ExpenseForm({ open, onOpenChange, expense }: ExpenseFormProps) {
                 <FormItem>
                   <FormLabel>Notes (Optional)</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Additional notes..." {...field} />
+                    <Textarea placeholder="Additional notes..." {...field} value={field.value || ""} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

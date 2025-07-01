@@ -295,7 +295,7 @@ export function RabbitForm({ open, onOpenChange, rabbit }: RabbitFormProps) {
                   <FormItem>
                     <FormLabel>Weight (lbs)</FormLabel>
                     <FormControl>
-                      <Input type="number" step="0.1" placeholder="4.2" {...field} />
+                      <Input type="number" step="0.1" placeholder="4.2" {...field} value={field.value || ""} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -310,7 +310,7 @@ export function RabbitForm({ open, onOpenChange, rabbit }: RabbitFormProps) {
                 <FormItem>
                   <FormLabel>Color</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., White, Brown, Mixed" {...field} />
+                    <Input placeholder="e.g., White, Brown, Mixed" {...field} value={field.value || ""} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -324,7 +324,7 @@ export function RabbitForm({ open, onOpenChange, rabbit }: RabbitFormProps) {
                 <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                   <FormControl>
                     <Checkbox
-                      checked={field.value}
+                      checked={field.value || false}
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
@@ -398,7 +398,7 @@ export function RabbitForm({ open, onOpenChange, rabbit }: RabbitFormProps) {
                 <FormItem>
                   <FormLabel>Notes</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Additional notes..." {...field} />
+                    <Textarea placeholder="Additional notes..." {...field} value={field.value || ""} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
