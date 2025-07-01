@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -16,9 +17,10 @@ interface BreedingFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   record?: BreedingRecord | null;
+  preSelectedRabbit?: Rabbit | null;
 }
 
-export function BreedingForm({ open, onOpenChange, record }: BreedingFormProps) {
+export function BreedingForm({ open, onOpenChange, record, preSelectedRabbit }: BreedingFormProps) {
   const { toast } = useToast();
   const isEditing = !!record;
 
@@ -26,11 +28,23 @@ export function BreedingForm({ open, onOpenChange, record }: BreedingFormProps) 
     queryKey: ["/api/rabbits"],
   });
 
+  const getDefaultMotherId = () => {
+    if (record?.motherId) return record.motherId;
+    if (preSelectedRabbit?.gender === 'female') return preSelectedRabbit.id;
+    return undefined;
+  };
+
+  const getDefaultFatherId = () => {
+    if (record?.fatherId) return record.fatherId;
+    if (preSelectedRabbit?.gender === 'male') return preSelectedRabbit.id;
+    return undefined;
+  };
+
   const form = useForm<InsertBreedingRecord>({
     resolver: zodResolver(insertBreedingRecordSchema),
     defaultValues: {
-      motherId: record?.motherId || undefined,
-      fatherId: record?.fatherId || undefined,
+      motherId: getDefaultMotherId(),
+      fatherId: getDefaultFatherId(),
       matingDate: record?.matingDate || format(new Date(), 'yyyy-MM-dd'),
       expectedKindleDate: record?.expectedKindleDate || format(addDays(new Date(), 31), 'yyyy-MM-dd'),
       actualKindleDate: record?.actualKindleDate || "",
@@ -41,6 +55,23 @@ export function BreedingForm({ open, onOpenChange, record }: BreedingFormProps) 
       notes: record?.notes || "",
     },
   });
+
+  // Update form when preSelectedRabbit or record changes
+  useEffect(() => {
+    const newValues = {
+      motherId: getDefaultMotherId(),
+      fatherId: getDefaultFatherId(),
+      matingDate: record?.matingDate || format(new Date(), 'yyyy-MM-dd'),
+      expectedKindleDate: record?.expectedKindleDate || format(addDays(new Date(), 31), 'yyyy-MM-dd'),
+      actualKindleDate: record?.actualKindleDate || "",
+      nestBoxDate: record?.nestBoxDate || "",
+      litterSize: record?.litterSize || undefined,
+      kitsAlive: record?.kitsAlive || undefined,
+      status: record?.status || "expecting",
+      notes: record?.notes || "",
+    };
+    form.reset(newValues);
+  }, [record, preSelectedRabbit, form]);
 
   const createMutation = useMutation({
     mutationFn: (data: InsertBreedingRecord) => apiRequest("POST", "/api/breeding-records", data),
