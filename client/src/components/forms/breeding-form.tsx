@@ -16,9 +16,10 @@ interface BreedingFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   record?: BreedingRecord | null;
+  preSelectedRabbit?: Rabbit | null;
 }
 
-export function BreedingForm({ open, onOpenChange, record }: BreedingFormProps) {
+export function BreedingForm({ open, onOpenChange, record, preSelectedRabbit }: BreedingFormProps) {
   const { toast } = useToast();
   const isEditing = !!record;
 
@@ -26,20 +27,43 @@ export function BreedingForm({ open, onOpenChange, record }: BreedingFormProps) 
     queryKey: ["/api/rabbits"],
   });
 
+  const getDefaultValues = () => {
+    if (record) {
+      return {
+        motherId: record.motherId,
+        fatherId: record.fatherId,
+        matingDate: record.matingDate,
+        expectedKindleDate: record.expectedKindleDate,
+        actualKindleDate: record.actualKindleDate || "",
+        nestBoxDate: record.nestBoxDate || "",
+        litterSize: record.litterSize || undefined,
+        kitsAlive: record.kitsAlive || undefined,
+        status: record.status,
+        notes: record.notes || "",
+      };
+    }
+    
+    // Pre-fill based on selected rabbit
+    const motherId = preSelectedRabbit?.gender === 'female' ? preSelectedRabbit.id : undefined;
+    const fatherId = preSelectedRabbit?.gender === 'male' ? preSelectedRabbit.id : undefined;
+    
+    return {
+      motherId,
+      fatherId,
+      matingDate: format(new Date(), 'yyyy-MM-dd'),
+      expectedKindleDate: format(addDays(new Date(), 31), 'yyyy-MM-dd'),
+      actualKindleDate: "",
+      nestBoxDate: "",
+      litterSize: undefined,
+      kitsAlive: undefined,
+      status: "expecting" as const,
+      notes: "",
+    };
+  };
+
   const form = useForm<InsertBreedingRecord>({
     resolver: zodResolver(insertBreedingRecordSchema),
-    defaultValues: {
-      motherId: record?.motherId || undefined,
-      fatherId: record?.fatherId || undefined,
-      matingDate: record?.matingDate || format(new Date(), 'yyyy-MM-dd'),
-      expectedKindleDate: record?.expectedKindleDate || format(addDays(new Date(), 31), 'yyyy-MM-dd'),
-      actualKindleDate: record?.actualKindleDate || "",
-      nestBoxDate: record?.nestBoxDate || "",
-      litterSize: record?.litterSize || undefined,
-      kitsAlive: record?.kitsAlive || undefined,
-      status: record?.status || "expecting",
-      notes: record?.notes || "",
-    },
+    defaultValues: getDefaultValues(),
   });
 
   const createMutation = useMutation({

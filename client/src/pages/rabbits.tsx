@@ -6,10 +6,12 @@ import { Search, Filter, Plus } from "lucide-react";
 import { RabbitCard } from "@/components/cards/rabbit-card";
 import { RabbitForm } from "@/components/forms/rabbit-form";
 import { RabbitDetailDialog } from "@/components/dialogs/rabbit-detail-dialog";
+import { useLocation } from "wouter";
 
 import type { Rabbit } from "@shared/schema";
 
 export default function Rabbits() {
+  const [, setLocation] = useLocation();
   const [searchTerm, setSearchTerm] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [editingRabbit, setEditingRabbit] = useState<Rabbit | null>(null);
@@ -36,9 +38,8 @@ export default function Rabbits() {
   };
 
   const handleBreed = (rabbit: Rabbit) => {
-    // For now, let's navigate to the breeding page
-    // In the future, this could open a breeding form dialog
-    window.location.href = '/breeding';
+    // Navigate to breeding page with rabbit pre-selected
+    setLocation(`/breeding?preselect=${rabbit.id}&gender=${rabbit.gender}`);
   };
 
   const handleFormClose = (open: boolean) => {
