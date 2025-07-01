@@ -99,37 +99,4 @@
   .bg-info {
     background-color: hsl(207, 90%, 54%);
   }
-
-  /* PWA Mobile Optimizations */
-  body {
-    -webkit-user-select: none;
-    -webkit-touch-callout: none;
-    -webkit-tap-highlight-color: transparent;
-    overscroll-behavior: none;
-    /* Prevent bounce scrolling on iOS */
-    position: fixed;
-    overflow: hidden;
-    width: 100%;
-    height: 100%;
-  }
-
-  #root {
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  /* Better touch targets for mobile */
-  button, [role="button"] {
-    min-height: 44px;
-    min-width: 44px;
-  }
-
-  /* Prevent text selection in app-like interface */
-  .no-select {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-  }
+}

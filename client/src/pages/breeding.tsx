@@ -1,41 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { BreedingCard } from "@/components/cards/breeding-card";
 import { BreedingForm } from "@/components/forms/breeding-form";
 
-import type { BreedingRecord, Rabbit } from "@shared/schema";
+import type { BreedingRecord } from "@shared/schema";
 
 export default function Breeding() {
   const [activeTab, setActiveTab] = useState<"active" | "history">("active");
   const [showForm, setShowForm] = useState(false);
   const [editingRecord, setEditingRecord] = useState<BreedingRecord | null>(null);
-  const [preSelectedRabbit, setPreSelectedRabbit] = useState<Rabbit | null>(null);
 
   const { data: breedingRecords = [], isLoading } = useQuery<BreedingRecord[]>({
     queryKey: ["/api/breeding-records"],
   });
-
-  const { data: rabbits = [] } = useQuery<Rabbit[]>({
-    queryKey: ["/api/rabbits"],
-  });
-
-  // Check for URL parameters to pre-select a rabbit
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const rabbitId = urlParams.get('rabbitId');
-    
-    if (rabbitId && rabbits.length > 0) {
-      const rabbit = rabbits.find(r => r.id === parseInt(rabbitId));
-      if (rabbit) {
-        setPreSelectedRabbit(rabbit);
-        setShowForm(true);
-        // Clear the URL parameter
-        window.history.replaceState({}, '', window.location.pathname);
-      }
-    }
-  }, [rabbits]);
 
   const activeRecords = breedingRecords.filter(record => 
     record.status === 'expecting' || record.status === 'kindled'
@@ -55,7 +34,6 @@ export default function Breeding() {
   const handleFormClose = () => {
     setShowForm(false);
     setEditingRecord(null);
-    setPreSelectedRabbit(null);
   };
 
   if (isLoading) {
@@ -136,7 +114,6 @@ export default function Breeding() {
         open={showForm}
         onOpenChange={handleFormClose}
         record={editingRecord}
-        preSelectedRabbit={preSelectedRabbit}
       />
     </div>
   );

@@ -84,26 +84,6 @@ This is a comprehensive rabbit management application built with React (frontend
 - **Vite**: Fast development server and build tool
 - **TSX**: TypeScript execution for server development
 
-## Progressive Web App (PWA) Features
-
-### Installation
-- **Manifest**: Complete app manifest with name, icons, theme colors
-- **Service Worker**: Caching strategy for offline functionality
-- **Mobile Optimized**: App-like experience with proper viewport and touch handling
-- **Installable**: Can be installed on Android/iOS devices like a native app
-
-### Mobile Experience
-- **Touch Optimizations**: Proper touch targets, no text selection, no zoom
-- **App-like Interface**: No browser chrome when installed, fullscreen experience
-- **Native Feel**: Prevents bounce scrolling, optimized for mobile interaction
-- **Icon Support**: SVG-based app icon that scales across all device sizes
-
-### Installation Instructions
-1. Open the app in Chrome/Safari on mobile
-2. Look for "Add to Home Screen" prompt or menu option
-3. App will install like a native application
-4. Launch from home screen for full app experience
-
 ## Deployment Strategy
 
 ### Development
@@ -126,8 +106,6 @@ This is a comprehensive rabbit management application built with React (frontend
 - July 01, 2025. Initial setup
 - July 01, 2025. Fixed SelectItem component errors across all forms by replacing empty string values with "none" values and updating handlers accordingly. All CRUD operations now working properly.
 - July 01, 2025. Added photo upload functionality for individual rabbits including schema updates, multer integration, and UI components for photo preview and upload.
-- July 01, 2025. Enhanced breeding workflow with pre-fill functionality - breed button now navigates to breeding page with selected rabbit automatically filled in mother/father field based on gender.
-- July 01, 2025. Implemented PWA (Progressive Web App) functionality including manifest.json, service worker, app icons, and mobile optimizations to enable installation as a mobile app.
 
 ## User Preferences
 

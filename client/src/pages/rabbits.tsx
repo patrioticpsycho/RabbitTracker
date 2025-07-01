@@ -36,8 +36,9 @@ export default function Rabbits() {
   };
 
   const handleBreed = (rabbit: Rabbit) => {
-    // Navigate to breeding page with the selected rabbit ID
-    window.location.href = `/breeding?rabbitId=${rabbit.id}`;
+    // For now, let's navigate to the breeding page
+    // In the future, this could open a breeding form dialog
+    window.location.href = '/breeding';
   };
 
   const handleFormClose = (open: boolean) => {
