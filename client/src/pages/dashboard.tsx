@@ -8,7 +8,6 @@ import { RabbitForm } from "@/components/forms/rabbit-form";
 import { BreedingForm } from "@/components/forms/breeding-form";
 import { ExpenseForm } from "@/components/forms/expense-form";
 import { format } from "date-fns";
-import type { Rabbit, BreedingRecord, Expense } from "@shared/schema";
 
 interface Stats {
   totalRabbits: number;
@@ -26,50 +25,50 @@ export default function Dashboard() {
     queryKey: ["/api/stats"],
   });
 
-  const { data: rabbits = [] } = useQuery<Rabbit[]>({
+  const { data: rabbits = [] } = useQuery({
     queryKey: ["/api/rabbits"],
   });
 
-  const { data: breedingRecords = [] } = useQuery<BreedingRecord[]>({
+  const { data: breedingRecords = [] } = useQuery({
     queryKey: ["/api/breeding-records"],
   });
 
-  const { data: expenses = [] } = useQuery<Expense[]>({
+  const { data: expenses = [] } = useQuery({
     queryKey: ["/api/expenses"],
   });
 
   // Recent activity (last 5 items)
   const recentActivity = [
-    ...rabbits.slice(-2).map((rabbit) => ({
+    ...rabbits.slice(-2).map((rabbit: any) => ({
       type: 'rabbit',
       icon: Plus,
       bgColor: 'bg-primary',
       title: 'New rabbit added',
       subtitle: `${rabbit.name} - ${rabbit.breed}`,
-      time: rabbit.createdAt ? format(new Date(rabbit.createdAt), 'MMM d, yyyy') : 'Today'
+      time: format(new Date(rabbit.createdAt), 'MMM d, yyyy')
     })),
-    ...breedingRecords.slice(-2).map((record) => ({
+    ...breedingRecords.slice(-2).map((record: any) => ({
       type: 'breeding',
       icon: Heart,
       bgColor: 'bg-secondary',
       title: 'Breeding recorded',
       subtitle: `Record #${record.id}`,
-      time: record.createdAt ? format(new Date(record.createdAt), 'MMM d, yyyy') : 'Today'
+      time: format(new Date(record.createdAt), 'MMM d, yyyy')
     })),
-    ...expenses.slice(-1).map((expense) => ({
+    ...expenses.slice(-1).map((expense: any) => ({
       type: 'expense',
       icon: DollarSign,
       bgColor: 'bg-info',
       title: 'Expense added',
       subtitle: `${expense.description} - $${expense.amount}`,
-      time: expense.createdAt ? format(new Date(expense.createdAt), 'MMM d, yyyy') : 'Today'
+      time: format(new Date(expense.createdAt), 'MMM d, yyyy')
     }))
   ].slice(-3);
 
   // Upcoming events
   const upcomingEvents = breedingRecords
-    .filter((record) => record.status === 'expecting')
-    .map((record) => {
+    .filter((record: any) => record.status === 'expecting')
+    .map((record: any) => {
       const expectedDate = new Date(record.expectedKindleDate);
       const today = new Date();
       const daysUntil = Math.ceil((expectedDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
@@ -194,7 +193,7 @@ export default function Dashboard() {
           </div>
           <CardContent className="p-0">
             <div className="divide-y divide-gray-100 dark:divide-gray-800">
-              {upcomingEvents.map((event, index: number) => {
+              {upcomingEvents.map((event, index) => {
                 const Icon = event.icon;
                 return (
                   <div key={index} className="p-4 flex items-center space-x-3">
