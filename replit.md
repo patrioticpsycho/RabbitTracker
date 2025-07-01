@@ -104,6 +104,7 @@ This is a comprehensive rabbit management application built with React (frontend
 
 ## Changelog
 - July 01, 2025. Initial setup
+- July 01, 2025. Fixed SelectItem component errors across all forms by replacing empty string values with "none" values and updating handlers accordingly. All CRUD operations now working properly.
 
 ## User Preferences
 
