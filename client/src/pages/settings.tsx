@@ -1,38 +1,120 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Moon, Sun, Download, Upload, Trash2, Info } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useTheme } from "@/contexts/theme-context";
+import { useQuery } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 
 export default function Settings() {
   const { toast } = useToast();
-  const [darkMode, setDarkMode] = useState(false);
-  const [notifications, setNotifications] = useState(true);
-  const [autoBackup, setAutoBackup] = useState(false);
+  const { theme, toggleTheme } = useTheme();
+  const [notifications, setNotifications] = useState(() => {
+    return localStorage.getItem("notifications") !== "false";
+  });
+  const [autoBackup, setAutoBackup] = useState(() => {
+    return localStorage.getItem("autoBackup") === "true";
+  });
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Get all data for export
+  const { data: rabbits = [] } = useQuery({ queryKey: ["/api/rabbits"] });
+  const { data: breedingRecords = [] } = useQuery({ queryKey: ["/api/breeding-records"] });
+  const { data: expenses = [] } = useQuery({ queryKey: ["/api/expenses"] });
+  const { data: offspring = [] } = useQuery({ queryKey: ["/api/offspring"] });
+  const { data: butcherRecords = [] } = useQuery({ queryKey: ["/api/butcher-records"] });
 
   const handleExportData = () => {
-    toast({
-      title: "Export Started",
-      description: "Your data export will begin shortly.",
-    });
+    try {
+      const exportData = {
+        rabbits,
+        breedingRecords,
+        expenses,
+        offspring,
+        butcherRecords,
+        exportDate: new Date().toISOString(),
+        version: "1.0.0"
+      };
+
+      const dataStr = JSON.stringify(exportData, null, 2);
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(dataBlob);
+      
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `rabbit-manager-export-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      toast({
+        title: "Export Successful",
+        description: "Your data has been exported successfully.",
+      });
+    } catch (error) {
+      toast({
+        title: "Export Failed",
+        description: "There was an error exporting your data.",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleImportData = () => {
-    toast({
-      title: "Import Feature",
-      description: "Data import functionality coming soon.",
-    });
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      try {
+        const data = JSON.parse(e.target?.result as string);
+        
+        // Validate the data structure
+        if (!data.rabbits || !Array.isArray(data.rabbits)) {
+          throw new Error("Invalid data format");
+        }
+
+        toast({
+          title: "Import Feature",
+          description: "Data import functionality is coming soon. File validation successful.",
+        });
+      } catch (error) {
+        toast({
+          title: "Import Failed", 
+          description: "Invalid file format. Please select a valid export file.",
+          variant: "destructive"
+        });
+      }
+    };
+    reader.readAsText(file);
   };
 
   const handleClearData = () => {
     toast({
       title: "Clear Data",
-      description: "This feature requires confirmation dialog.",
+      description: "This feature requires confirmation. Implementation coming soon.",
     });
+  };
+
+  const handleNotificationChange = (checked: boolean) => {
+    setNotifications(checked);
+    localStorage.setItem("notifications", checked.toString());
+  };
+
+  const handleAutoBackupChange = (checked: boolean) => {
+    setAutoBackup(checked);
+    localStorage.setItem("autoBackup", checked.toString());
   };
 
   return (
@@ -56,8 +138,8 @@ export default function Settings() {
               </p>
             </div>
             <Switch
-              checked={darkMode}
-              onCheckedChange={setDarkMode}
+              checked={theme === "dark"}
+              onCheckedChange={toggleTheme}
             />
           </div>
         </CardContent>
@@ -78,7 +160,7 @@ export default function Settings() {
             </div>
             <Switch
               checked={notifications}
-              onCheckedChange={setNotifications}
+              onCheckedChange={handleNotificationChange}
             />
           </div>
         </CardContent>
@@ -99,7 +181,7 @@ export default function Settings() {
             </div>
             <Switch
               checked={autoBackup}
-              onCheckedChange={setAutoBackup}
+              onCheckedChange={handleAutoBackupChange}
             />
           </div>
 
@@ -159,6 +241,15 @@ export default function Settings() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Hidden file input for import */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+        accept=".json"
+        onChange={handleFileSelect}
+      />
     </div>
   );
 }
