@@ -7,12 +7,14 @@ import { Separator } from "@/components/ui/separator";
 import { Moon, Sun, Download, Upload, Trash2, Info } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useTheme } from "@/contexts/theme-context";
+import { useNotifications } from "@/contexts/notifications-context";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 
 export default function Settings() {
   const { toast } = useToast();
   const { theme, toggleTheme } = useTheme();
+  const { isSupported, isPermissionGranted, requestPermission, sendTestNotification } = useNotifications();
   const [notifications, setNotifications] = useState(() => {
     return localStorage.getItem("notifications") !== "false";
   });
@@ -107,9 +109,22 @@ export default function Settings() {
     });
   };
 
-  const handleNotificationChange = (checked: boolean) => {
+  const handleNotificationChange = async (checked: boolean) => {
+    if (checked && !isPermissionGranted) {
+      const granted = await requestPermission();
+      if (!granted) {
+        return; // Don't update state if permission denied
+      }
+    }
     setNotifications(checked);
     localStorage.setItem("notifications", checked.toString());
+    
+    if (checked && isPermissionGranted) {
+      toast({
+        title: "Notifications Enabled",
+        description: "You'll receive breeding and health reminders.",
+      });
+    }
   };
 
   const handleAutoBackupChange = (checked: boolean) => {
@@ -155,14 +170,35 @@ export default function Settings() {
             <div className="space-y-0.5">
               <Label>Push Notifications</Label>
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                Receive notifications for breeding reminders
+                {!isSupported 
+                  ? "Not supported in this browser"
+                  : !isPermissionGranted 
+                    ? "Enable to receive breeding and health reminders"
+                    : "Receive notifications for breeding reminders"
+                }
               </p>
             </div>
             <Switch
-              checked={notifications}
+              checked={notifications && isPermissionGranted}
               onCheckedChange={handleNotificationChange}
+              disabled={!isSupported}
             />
           </div>
+          
+          {isSupported && isPermissionGranted && (
+            <div className="flex justify-between items-center pt-2">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={sendTestNotification}
+              >
+                Test Notification
+              </Button>
+              <span className="text-xs text-green-600 dark:text-green-400">
+                ✓ Permission granted
+              </span>
+            </div>
+          )}
         </CardContent>
       </Card>
 

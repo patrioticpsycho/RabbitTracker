@@ -4,6 +4,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/contexts/theme-context";
+import { NotificationsProvider } from "@/contexts/notifications-context";
 import Dashboard from "@/pages/dashboard";
 import Rabbits from "@/pages/rabbits";
 import Breeding from "@/pages/breeding";
@@ -32,16 +33,18 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <TooltipProvider>
-          <div className="max-w-md mx-auto bg-white dark:bg-black min-h-screen relative">
-            <TopBar />
-            <main className="pb-20">
-              <Router />
-            </main>
-            <BottomNav />
-          </div>
-          <Toaster />
-        </TooltipProvider>
+        <NotificationsProvider>
+          <TooltipProvider>
+            <div className="max-w-md mx-auto bg-white dark:bg-black min-h-screen relative">
+              <TopBar />
+              <main className="pb-20">
+                <Router />
+              </main>
+              <BottomNav />
+            </div>
+            <Toaster />
+          </TooltipProvider>
+        </NotificationsProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

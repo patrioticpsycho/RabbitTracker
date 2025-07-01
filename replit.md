@@ -109,6 +109,8 @@ This is a comprehensive rabbit management application built with React (frontend
 - July 01, 2025. Enhanced breeding workflow with pre-fill functionality - breed button now navigates to breeding page with selected rabbit automatically filled in mother/father field based on gender.
 - July 01, 2025. Implemented PWA (Progressive Web App) functionality including manifest.json, service worker, app icons, and mobile optimizations to enable installation as a mobile app.
 - July 01, 2025. Fixed TypeScript compilation errors preventing app startup and successfully implemented Settings page with appearance controls, notification settings, data management options, and app information display.
+- July 01, 2025. Implemented functional dark mode toggle with theme context, working data export functionality, and comprehensive push notification system with service worker integration for breeding and health reminders.
+- July 01, 2025. Added interactive search functionality to top bar allowing users to search rabbits and breeding records, plus notification bell with smart alerts for upcoming kindle dates and overdue health checks.
 
 ## User Preferences
 
