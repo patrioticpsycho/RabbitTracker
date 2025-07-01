@@ -106,6 +106,9 @@ This is a comprehensive rabbit management application built with React (frontend
 - July 01, 2025. Initial setup
 - July 01, 2025. Fixed SelectItem component errors across all forms by replacing empty string values with "none" values and updating handlers accordingly. All CRUD operations now working properly.
 - July 01, 2025. Added photo upload functionality for individual rabbits including schema updates, multer integration, and UI components for photo preview and upload.
+- July 01, 2025. Enhanced breeding workflow with pre-fill functionality - breed button now navigates to breeding page with selected rabbit automatically filled in mother/father field based on gender.
+- July 01, 2025. Implemented PWA (Progressive Web App) functionality including manifest.json, service worker, app icons, and mobile optimizations to enable installation as a mobile app.
+- July 01, 2025. Fixed TypeScript compilation errors preventing app startup and successfully implemented Settings page with appearance controls, notification settings, data management options, and app information display.
 
 ## User Preferences
 

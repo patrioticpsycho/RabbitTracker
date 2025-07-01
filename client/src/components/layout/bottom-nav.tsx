@@ -66,10 +66,12 @@ export function BottomNav() {
           <CloudUpload className="mr-3 h-4 w-4" />
           Backup & Sync
         </Button>
-        <Button variant="ghost" className="w-full justify-start">
-          <Settings className="mr-3 h-4 w-4" />
-          Settings
-        </Button>
+        <Link href="/settings">
+          <Button variant="ghost" className="w-full justify-start" onClick={() => setMoreOpen(false)}>
+            <Settings className="mr-3 h-4 w-4" />
+            Settings
+          </Button>
+        </Link>
         <Button variant="ghost" className="w-full justify-start">
           <HelpCircle className="mr-3 h-4 w-4" />
           Help & Support
