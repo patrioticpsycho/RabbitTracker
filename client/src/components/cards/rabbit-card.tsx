@@ -85,8 +85,8 @@ export function RabbitCard({ rabbit, onEdit }: RabbitCardProps) {
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400">{rabbit.breed}</p>
             <p className="text-xs text-gray-500 dark:text-gray-500">
-              Born: {format(new Date(rabbit.birthDate), 'MMM d, yyyy')} • 
-              Age: {calculateAge(rabbit.birthDate)} • 
+              Born: {rabbit.birthDate ? format(new Date(rabbit.birthDate), 'MMM d, yyyy') : 'N/A'} • 
+              Age: {rabbit.birthDate ? calculateAge(rabbit.birthDate) : 'N/A'} • 
               Weight: {rabbit.weight ? `${rabbit.weight} lbs` : 'N/A'}
             </p>
           </div>

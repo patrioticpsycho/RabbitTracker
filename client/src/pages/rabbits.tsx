@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Search, Filter, Plus } from "lucide-react";
 import { RabbitCard } from "@/components/cards/rabbit-card";
 import { RabbitForm } from "@/components/forms/rabbit-form";
+import { RabbitDetailDialog } from "@/components/dialogs/rabbit-detail-dialog";
 
 import type { Rabbit } from "@shared/schema";
 
@@ -12,6 +13,8 @@ export default function Rabbits() {
   const [searchTerm, setSearchTerm] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [editingRabbit, setEditingRabbit] = useState<Rabbit | null>(null);
+  const [showDetailDialog, setShowDetailDialog] = useState(false);
+  const [selectedRabbit, setSelectedRabbit] = useState<Rabbit | null>(null);
 
   const { data: rabbits = [], isLoading } = useQuery<Rabbit[]>({
     queryKey: ["/api/rabbits"],
@@ -22,14 +25,21 @@ export default function Rabbits() {
     rabbit.breed.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handleView = (rabbit: Rabbit) => {
+    setSelectedRabbit(rabbit);
+    setShowDetailDialog(true);
+  };
+
   const handleEdit = (rabbit: Rabbit) => {
     setEditingRabbit(rabbit);
     setShowForm(true);
   };
 
-  const handleFormClose = () => {
-    setShowForm(false);
-    setEditingRabbit(null);
+  const handleFormClose = (open: boolean) => {
+    setShowForm(open);
+    if (!open) {
+      setEditingRabbit(null);
+    }
   };
 
   if (isLoading) {
@@ -97,13 +107,20 @@ export default function Rabbits() {
             <RabbitCard
               key={rabbit.id}
               rabbit={rabbit}
-              onEdit={handleEdit}
+              onEdit={handleView}
             />
           ))
         )}
       </div>
 
 
+
+      <RabbitDetailDialog
+        open={showDetailDialog}
+        onOpenChange={setShowDetailDialog}
+        rabbit={selectedRabbit}
+        onEdit={handleEdit}
+      />
 
       <RabbitForm
         open={showForm}
