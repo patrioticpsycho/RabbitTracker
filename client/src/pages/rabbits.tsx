@@ -1,0 +1,108 @@
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Search, Filter } from "lucide-react";
+import { RabbitCard } from "@/components/cards/rabbit-card";
+import { RabbitForm } from "@/components/forms/rabbit-form";
+import { FloatingActionButton } from "@/components/ui/floating-action-button";
+import type { Rabbit } from "@shared/schema";
+
+export default function Rabbits() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showForm, setShowForm] = useState(false);
+  const [editingRabbit, setEditingRabbit] = useState<Rabbit | null>(null);
+
+  const { data: rabbits = [], isLoading } = useQuery<Rabbit[]>({
+    queryKey: ["/api/rabbits"],
+  });
+
+  const filteredRabbits = rabbits.filter(rabbit =>
+    rabbit.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    rabbit.breed.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const handleEdit = (rabbit: Rabbit) => {
+    setEditingRabbit(rabbit);
+    setShowForm(true);
+  };
+
+  const handleFormClose = () => {
+    setShowForm(false);
+    setEditingRabbit(null);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="p-4">
+        <div className="flex space-x-2 mb-4">
+          <div className="flex-1 h-10 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+          <div className="w-12 h-10 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+        </div>
+        <div className="space-y-3">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm border animate-pulse">
+              <div className="flex items-center space-x-3">
+                <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+                <div className="flex-1">
+                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
+                  <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-4 space-y-4">
+      {/* Search and Filter */}
+      <div className="flex space-x-2">
+        <div className="flex-1 relative">
+          <Input
+            type="text"
+            placeholder="Search rabbits..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+          />
+          <Search className="absolute left-3 top-3 text-gray-400 h-4 w-4" />
+        </div>
+        <Button variant="outline" size="icon">
+          <Filter className="h-4 w-4" />
+        </Button>
+      </div>
+
+      {/* Rabbits List */}
+      <div className="space-y-3">
+        {filteredRabbits.length === 0 ? (
+          <div className="text-center py-8">
+            <p className="text-gray-500 dark:text-gray-400">
+              {searchTerm ? "No rabbits found matching your search." : "No rabbits added yet."}
+            </p>
+          </div>
+        ) : (
+          filteredRabbits.map((rabbit) => (
+            <RabbitCard
+              key={rabbit.id}
+              rabbit={rabbit}
+              onEdit={handleEdit}
+            />
+          ))
+        )}
+      </div>
+
+      <FloatingActionButton
+        onAddRabbit={() => setShowForm(true)}
+      />
+
+      <RabbitForm
+        open={showForm}
+        onOpenChange={handleFormClose}
+        rabbit={editingRabbit}
+      />
+    </div>
+  );
+}
