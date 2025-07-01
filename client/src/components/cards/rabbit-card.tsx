@@ -9,9 +9,10 @@ import type { Rabbit } from "@shared/schema";
 interface RabbitCardProps {
   rabbit: Rabbit;
   onEdit: (rabbit: Rabbit) => void;
+  onBreed?: (rabbit: Rabbit) => void;
 }
 
-export function RabbitCard({ rabbit, onEdit }: RabbitCardProps) {
+export function RabbitCard({ rabbit, onEdit, onBreed }: RabbitCardProps) {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active': return 'bg-success';
@@ -106,6 +107,7 @@ export function RabbitCard({ rabbit, onEdit }: RabbitCardProps) {
               variant="outline"
               disabled={isTooYoungToBreed()}
               className={isTooYoungToBreed() ? "opacity-50" : ""}
+              onClick={() => onBreed && onBreed(rabbit)}
             >
               {isTooYoungToBreed() ? "Too Young" : "Breed"}
             </Button>

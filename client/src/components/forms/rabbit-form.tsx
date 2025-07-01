@@ -24,11 +24,6 @@ export function RabbitForm({ open, onOpenChange, rabbit }: RabbitFormProps) {
   const isEditing = !!rabbit;
   const [uploading, setUploading] = useState(false);
   const [photoPreview, setPhotoPreview] = useState<string>(rabbit?.photoUrl || "");
-  
-  // Update photo preview when rabbit changes
-  useEffect(() => {
-    setPhotoPreview(rabbit?.photoUrl || "");
-  }, [rabbit?.photoUrl]);
 
   const { data: rabbits = [] } = useQuery<Rabbit[]>({
     queryKey: ["/api/rabbits"],
@@ -51,6 +46,43 @@ export function RabbitForm({ open, onOpenChange, rabbit }: RabbitFormProps) {
       notes: rabbit?.notes || "",
     },
   });
+
+  // Update form and photo preview when rabbit changes
+  useEffect(() => {
+    if (rabbit) {
+      form.reset({
+        name: rabbit.name || "",
+        breed: rabbit.breed || "",
+        gender: rabbit.gender || "female",
+        birthDate: rabbit.birthDate || "",
+        weight: rabbit.weight || "",
+        color: rabbit.color || "",
+        status: rabbit.status || "active",
+        isBreeder: rabbit.isBreeder || false,
+        motherId: rabbit.motherId || undefined,
+        fatherId: rabbit.fatherId || undefined,
+        photoUrl: rabbit.photoUrl || "",
+        notes: rabbit.notes || "",
+      });
+      setPhotoPreview(rabbit.photoUrl || "");
+    } else {
+      form.reset({
+        name: "",
+        breed: "",
+        gender: "female",
+        birthDate: "",
+        weight: "",
+        color: "",
+        status: "active",
+        isBreeder: false,
+        motherId: undefined,
+        fatherId: undefined,
+        photoUrl: "",
+        notes: "",
+      });
+      setPhotoPreview("");
+    }
+  }, [rabbit, form]);
 
   const createMutation = useMutation({
     mutationFn: (data: InsertRabbit) => apiRequest("POST", "/api/rabbits", data),

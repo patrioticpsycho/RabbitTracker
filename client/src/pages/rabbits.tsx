@@ -35,6 +35,12 @@ export default function Rabbits() {
     setShowForm(true);
   };
 
+  const handleBreed = (rabbit: Rabbit) => {
+    // For now, let's navigate to the breeding page
+    // In the future, this could open a breeding form dialog
+    window.location.href = '/breeding';
+  };
+
   const handleFormClose = (open: boolean) => {
     setShowForm(open);
     if (!open) {
@@ -108,6 +114,7 @@ export default function Rabbits() {
               key={rabbit.id}
               rabbit={rabbit}
               onEdit={handleView}
+              onBreed={handleBreed}
             />
           ))
         )}
