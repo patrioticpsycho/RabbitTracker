@@ -7,7 +7,7 @@ import Dashboard from "@/pages/dashboard";
 import Rabbits from "@/pages/rabbits";
 import Breeding from "@/pages/breeding";
 import Expenses from "@/pages/expenses";
-import Records from "@/pages/records";
+
 import NotFound from "@/pages/not-found";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { TopBar } from "@/components/layout/top-bar";
@@ -19,7 +19,6 @@ function Router() {
       <Route path="/rabbits" component={Rabbits} />
       <Route path="/breeding" component={Breeding} />
       <Route path="/expenses" component={Expenses} />
-      <Route path="/records" component={Records} />
       <Route component={NotFound} />
     </Switch>
   );
