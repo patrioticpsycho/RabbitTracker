@@ -128,14 +128,14 @@ export function ExpenseForm({ open, onOpenChange, expense }: ExpenseFormProps) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Subcategory (Optional)</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value || ""}>
+                  <Select onValueChange={(value) => field.onChange(value === "none" ? "" : value)} defaultValue={field.value || "none"}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select subcategory" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="">None</SelectItem>
+                      <SelectItem value="none">None</SelectItem>
                       {selectedCategory && subcategoryOptions[selectedCategory as keyof typeof subcategoryOptions]?.map((sub) => (
                         <SelectItem key={sub} value={sub}>
                           {sub}
