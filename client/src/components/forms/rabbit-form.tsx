@@ -237,14 +237,14 @@ export function RabbitForm({ open, onOpenChange, rabbit }: RabbitFormProps) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Mother</FormLabel>
-                    <Select onValueChange={(value) => field.onChange(value ? parseInt(value) : undefined)} defaultValue={field.value?.toString()}>
+                    <Select onValueChange={(value) => field.onChange(value === "none" ? undefined : parseInt(value))} defaultValue={field.value?.toString() || "none"}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select mother" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="">None</SelectItem>
+                        <SelectItem value="none">None</SelectItem>
                         {femaleRabbits.map((rabbit) => (
                           <SelectItem key={rabbit.id} value={rabbit.id.toString()}>
                             {rabbit.name}
@@ -263,14 +263,14 @@ export function RabbitForm({ open, onOpenChange, rabbit }: RabbitFormProps) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Father</FormLabel>
-                    <Select onValueChange={(value) => field.onChange(value ? parseInt(value) : undefined)} defaultValue={field.value?.toString()}>
+                    <Select onValueChange={(value) => field.onChange(value === "none" ? undefined : parseInt(value))} defaultValue={field.value?.toString() || "none"}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select father" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="">None</SelectItem>
+                        <SelectItem value="none">None</SelectItem>
                         {maleRabbits.map((rabbit) => (
                           <SelectItem key={rabbit.id} value={rabbit.id.toString()}>
                             {rabbit.name}
