@@ -1,5 +1,9 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import multer from "multer";
+import path from "path";
+import { fileURLToPath } from 'node:url';
+import { dirname } from 'node:path';
 import { storage } from "./storage";
 import { 
   insertRabbitSchema,
@@ -10,7 +14,57 @@ import {
 } from "@shared/schema";
 import { z } from "zod";
 
+// Configure multer for file uploads
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      cb(null, `rabbit-${uniqueSuffix}${path.extname(file.originalname)}`);
+    }
+  }),
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB limit
+  },
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = /jpeg|jpg|png|gif|webp/;
+    const extName = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimeType = allowedTypes.test(file.mimetype);
+    
+    if (mimeType && extName) {
+      return cb(null, true);
+    } else {
+      cb(new Error('Only image files are allowed'));
+    }
+  }
+});
+
 export async function registerRoutes(app: Express): Promise<Server> {
+  
+  // Photo upload endpoint
+  app.post("/api/upload-photo", upload.single('photo'), (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: "No file uploaded" });
+      }
+      
+      const photoUrl = `/uploads/${req.file.filename}`;
+      res.json({ photoUrl });
+    } catch (error) {
+      res.status(500).json({ message: "Upload failed" });
+    }
+  });
+
+  // Serve uploaded files
+  app.get('/uploads/:filename', (req, res) => {
+    const filename = req.params.filename;
+    const filePath = path.join(process.cwd(), 'uploads', filename);
+    res.sendFile(filePath);
+  });
+
+
   
   // Rabbits routes
   app.get("/api/rabbits", async (req, res) => {

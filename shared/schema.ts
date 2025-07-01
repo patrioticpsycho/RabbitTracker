@@ -14,6 +14,7 @@ export const rabbits = pgTable("rabbits", {
   isBreeder: boolean("is_breeder").default(false),
   motherId: integer("mother_id"),
   fatherId: integer("father_id"),
+  photoUrl: text("photo_url"), // URL to uploaded photo
   notes: text("notes"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });

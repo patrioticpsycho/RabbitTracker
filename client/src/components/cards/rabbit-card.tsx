@@ -57,9 +57,19 @@ export function RabbitCard({ rabbit, onEdit }: RabbitCardProps) {
     <Card>
       <CardContent className="p-4">
         <div className="flex items-center space-x-3">
-          <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-            <FaPaw className="text-primary text-lg" />
-          </div>
+          {rabbit.photoUrl ? (
+            <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-gray-300">
+              <img 
+                src={rabbit.photoUrl} 
+                alt={`Photo of ${rabbit.name}`}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          ) : (
+            <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+              <FaPaw className="text-primary text-lg" />
+            </div>
+          )}
           <div className="flex-1">
             <div className="flex items-center space-x-2">
               <h3 className="font-semibold text-gray-900 dark:text-white">{rabbit.name}</h3>

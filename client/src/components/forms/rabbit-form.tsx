@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -21,6 +22,13 @@ interface RabbitFormProps {
 export function RabbitForm({ open, onOpenChange, rabbit }: RabbitFormProps) {
   const { toast } = useToast();
   const isEditing = !!rabbit;
+  const [uploading, setUploading] = useState(false);
+  const [photoPreview, setPhotoPreview] = useState<string>(rabbit?.photoUrl || "");
+  
+  // Update photo preview when rabbit changes
+  useEffect(() => {
+    setPhotoPreview(rabbit?.photoUrl || "");
+  }, [rabbit?.photoUrl]);
 
   const { data: rabbits = [] } = useQuery<Rabbit[]>({
     queryKey: ["/api/rabbits"],
@@ -39,6 +47,7 @@ export function RabbitForm({ open, onOpenChange, rabbit }: RabbitFormProps) {
       isBreeder: rabbit?.isBreeder || false,
       motherId: rabbit?.motherId || undefined,
       fatherId: rabbit?.fatherId || undefined,
+      photoUrl: rabbit?.photoUrl || "",
       notes: rabbit?.notes || "",
     },
   });
@@ -69,6 +78,46 @@ export function RabbitForm({ open, onOpenChange, rabbit }: RabbitFormProps) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
     },
   });
+
+  const uploadPhoto = async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append('photo', file);
+    
+    const response = await fetch('/api/upload-photo', {
+      method: 'POST',
+      body: formData,
+    });
+    
+    if (!response.ok) {
+      throw new Error('Photo upload failed');
+    }
+    
+    const { photoUrl } = await response.json();
+    return photoUrl;
+  };
+
+  const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const photoUrl = await uploadPhoto(file);
+      form.setValue('photoUrl', photoUrl);
+      setPhotoPreview(photoUrl);
+      toast({
+        title: "Photo uploaded successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Upload failed",
+        description: "Please try again",
+        variant: "destructive",
+      });
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const onSubmit = (data: InsertRabbit) => {
     if (isEditing) {
@@ -140,6 +189,32 @@ export function RabbitForm({ open, onOpenChange, rabbit }: RabbitFormProps) {
                   </FormItem>
                 )}
               />
+
+              {/* Photo Upload Field */}
+              <FormItem>
+                <FormLabel>Photo</FormLabel>
+                <div className="space-y-4">
+                  {photoPreview && (
+                    <div className="flex justify-center">
+                      <img 
+                        src={photoPreview} 
+                        alt="Rabbit photo preview"
+                        className="w-32 h-32 object-cover rounded-lg border-2 border-gray-300"
+                      />
+                    </div>
+                  )}
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      onChange={handlePhotoUpload}
+                      disabled={uploading}
+                      className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+                    />
+                    {uploading && <div className="text-sm text-gray-500">Uploading...</div>}
+                  </div>
+                </div>
+              </FormItem>
 
               <FormField
                 control={form.control}

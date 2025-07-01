@@ -83,6 +83,7 @@ export class MemStorage implements IStorage {
       isBreeder: insertRabbit.isBreeder || null,
       motherId: insertRabbit.motherId || null,
       fatherId: insertRabbit.fatherId || null,
+      photoUrl: insertRabbit.photoUrl || null,
       notes: insertRabbit.notes || null,
       createdAt: new Date(),
     };
