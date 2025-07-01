@@ -4,7 +4,7 @@ import { Link, useLocation } from "wouter";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { DollarSign, Calendar, BarChart, Download, CloudUpload, Settings, HelpCircle } from "lucide-react";
+import { DollarSign, ClipboardList, Calendar, Download, CloudUpload, Settings, HelpCircle } from "lucide-react";
 
 export function BottomNav() {
   const [location] = useLocation();
@@ -36,20 +36,24 @@ export function BottomNav() {
           </Button>
         </Link>
         
-
+        <Link href="/records">
+          <Button 
+            variant="outline" 
+            className="h-auto p-4 flex flex-col items-center space-y-2"
+            onClick={() => setMoreOpen(false)}
+          >
+            <div className="w-12 h-12 bg-info/10 rounded-full flex items-center justify-center">
+              <ClipboardList className="text-info text-lg" />
+            </div>
+            <span className="text-sm font-medium">Records</span>
+          </Button>
+        </Link>
         
         <Button variant="outline" className="h-auto p-4 flex flex-col items-center space-y-2">
           <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
             <Calendar className="text-primary text-lg" />
           </div>
           <span className="text-sm font-medium">Calendar</span>
-        </Button>
-        
-        <Button variant="outline" className="h-auto p-4 flex flex-col items-center space-y-2">
-          <div className="w-12 h-12 bg-secondary/10 rounded-full flex items-center justify-center">
-            <BarChart className="text-secondary text-lg" />
-          </div>
-          <span className="text-sm font-medium">Reports</span>
         </Button>
       </div>
 
